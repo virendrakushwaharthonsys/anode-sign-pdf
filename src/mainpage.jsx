@@ -212,15 +212,15 @@ const MainApp = () => {
             const formData = new FormData();
             formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
 
-            const response = await fetch('http://localhost:3008/upload', {
-                method: 'POST',
-                mode: 'cors',
-                body: formData,
-            });
+            // const response = await fetch('http://localhost:3008/upload', {
+            //     method: 'POST',
+            //     mode: 'cors',
+            //     body: formData,
+            // });
 
-            if (!response.ok) {
-                throw new Error('Failed to upload signed PDF');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Failed to upload signed PDF');
+            // }
 
             console.log('Signed PDF uploaded successfully');
             setShowModal(true);
