@@ -3,6 +3,8 @@
     flex-direction: column;
     align-items: center;
     background-color: rgb(226, 226, 226);
+    margin-bottom: 20px;
+    height: 100%;
 }
 
 .pdf_viewer {
@@ -21,51 +23,100 @@
     width: 100px;
     height: 50px;
     font-size: 15px;
+    border-radius: 5px;
+}
+
+.signature_div {
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.Clear {
+    background-color: #15049e;
+    color: white;
+    width: 150px;
+    height: 50px;
+    font-size: 15px;
+    margin-top: 20px;
+    border-radius: 5px;
 }
 
 .canvas_container {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
     margin-top: 20px;
+    width: 50%;
+    margin: 0 auto;
+}
+
+.signature_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    margin: 0 auto !important;
+    width: 100%;
+
 }
 
 .Save {
     background-color: #15049e;
     color: white;
-    width: 200px;
+    width: 150px;
     height: 50px;
     font-size: 15px;
-    margin-top: 50px;
+    margin-top: 20px;
+    border-radius: 5px;
+
 }
+
+.canvas_main_div {
+    display: flex;
+    width: 900px;
+    margin-bottom: 20px;
+
+
+}
+
+
 
 .viewpdf {
     margin-top: 20px;
-    width: 400px;
+    width: 100%;
     display: flex;
-    justify-content: space-around;
+    /* height: 50px; */
+    justify-content: space-between;
+
+}
+
+.Viewbtn a {
+    color: white;
+    text-decoration: none;
 }
 
 .Viewbtn {
     background-color: #15049e;
     color: white;
-    width: 200px;
+    width: 150px;
     height: 50px;
     font-size: 15px;
-    margin-top: 50px;
+    color: white;
+    border-radius: 5px;
 }
 
 .SubmitSign {
     background-color: #15049e;
     color: white;
-    width: 200px;
+    width: 150px;
     height: 50px;
     font-size: 15px;
+    border-radius: 5px;
 }
 
 .SubmitSign,
-.DownlaodPdf:hover {
+.Finish,
+.DownlaodPdf,
+.sign.Save,
+:hover {
     cursor: pointer;
 }
 
@@ -83,9 +134,40 @@
 .DownlaodPdf {
     background-color: #15049e;
     color: white;
-    width: 200px;
+    width: 150px;
     height: 50px;
     font-size: 15px;
+    border-radius: 5px;
+}
+
+.DownlaodPdf a {
+    color: white;
+    text-decoration: none;
+}
+
+.Finish {
+    background-color: #15049e;
+    color: white;
+    width: 150px;
+    height: 50px;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.modal_button_div {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.modal_button {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+
+    margin-top: 50px;
 }
 
 .modal {
@@ -127,3 +209,5 @@
 .modal_content button {
     margin-top: 10px;
 }
+
+.Viewpdf_doc {}
