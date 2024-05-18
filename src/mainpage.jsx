@@ -21,6 +21,7 @@ const MainApp = () => {
     const [signedPdfBlob, setSignedPdfBlob] = useState(null);
     const [isDrawing, setIsDrawing] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    // const [clearVisible, setClearVisible] = useState(true);
     // const handleFileChange = (e) => {
     //     const selectedFile = e.target.files && e.target.files[0];
     //     if (selectedFile) {
@@ -39,7 +40,9 @@ const MainApp = () => {
     const handleCloseModal = () => {
         setShowModal(false);
     };
-
+    const handleFinish = () => {
+        window.location.reload();
+    };
     const handleBackdropClick = (e) => {
         if (e.target === e.currentTarget) {
             setShowModal(false);
@@ -61,6 +64,7 @@ const MainApp = () => {
             }
         }
     };
+   
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
     };
@@ -85,8 +89,13 @@ const MainApp = () => {
         ctx.stroke();
     };
 
-    const handleSignButtonClick = () => {
-        setShowCanvas(true);
+    // const handleSignButtonClick = () => {
+    //     setShowCanvas(true);
+    // };
+    const handleClearSignature = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
     const handleSaveSignature = async () => {
         if (!file || !canvasRef.current) return;
@@ -100,8 +109,7 @@ const MainApp = () => {
             for (let i = 0; i < pages.length; i++) {
                 const page = pages[i];
 
-                // Your existing code to handle signatures on each page
-                // For example:
+               
                 const signatureData = canvasRef.current.toDataURL('image/png');
                 const pngImage = await pdfDoc.embedPng(signatureData);
 
@@ -134,69 +142,14 @@ const MainApp = () => {
             setSignedPdfBlob(modifiedBlob);
             const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
             setSignedPdfUrl(modifiedPdfUrl);
-            setShowCanvas(false);
+            // setClearVisible(false);
         } catch (error) {
             console.error('Error saving signature:', error);
         }
     };
 
 
-    // const handleSaveSignature = async () => {
-    //     if (!file || !canvasRef.current) return;
-
-    //     try {
-    //         const existingPdfBytes = await fetch(file).then(res => res.arrayBuffer());
-    //         // const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    //         const pdfDoc = PDFDocument.load(existingPdfBytes, { ignoreEncryption: true })
-    //         for (let i = 0; i < pdfDoc.getPageCount(); i++) {
-    //             const page = pdfDoc.getPage(i);
-
-
-    //             const signatureData = canvasRef.current.toDataURL('image/png');
-
-
-    //             const pngImage = await pdfDoc.embedPng(signatureData);
-
-
-    //             const extraSpace = 100;
-
-    //             const { width, height } = page.getSize();
-
-
-    //             page.setSize(width, height + extraSpace);
-
-
-    //             page.translateContent(0, extraSpace);
-
-
-    //             const signatureWidth = 100;
-    //             const signatureHeight = 50;
-    //             const xPos = 470;
-    //             const yPos = 50;
-
-
-    //             page.drawImage(pngImage, {
-    //                 x: xPos,
-    //                 y: -yPos,
-    //                 width: signatureWidth,
-    //                 height: signatureHeight,
-    //             });
-    //         }
-
-
-    //         const modifiedPdfBytes = await pdfDoc.save();
-    //         const modifiedBlob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
-
-
-    //         setSignedPdfBlob(modifiedBlob);
-
-    //         const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
-    //         setSignedPdfUrl(modifiedPdfUrl);
-    //         setShowCanvas(false);
-    //     } catch (error) {
-    //         console.error('Error saving signature:', error);
-    //     }
-    // };
+   
 
 
   
@@ -212,15 +165,15 @@ const MainApp = () => {
             const formData = new FormData();
             formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
 
-            // const response = await fetch('http://localhost:3008/upload', {
-            //     method: 'POST',
-            //     mode: 'cors',
-            //     body: formData,
-            // });
+            const response = await fetch('http://localhost:3008/upload', {
+                method: 'POST',
+                mode: 'cors',
+                body: formData,
+            });
 
-            // if (!response.ok) {
-            //     throw new Error('Failed to upload signed PDF');
-            // }
+            if (!response.ok) {
+                throw new Error('Failed to upload signed PDF');
+            }
 
             console.log('Signed PDF uploaded successfully');
             setShowModal(true);
@@ -256,33 +209,50 @@ const MainApp = () => {
                     </Document>
                 </div>
             )}
-            {!signedPdfUrl && (
+            {/* {!signedPdfUrl && (
                 <button onClick={handleSignButtonClick} className={styles.sign}>Sign</button>
             )}
-            {showCanvas && (
-                <div className={styles.canvas_container}>
-                    <canvas
-                        ref={canvasRef}
-                        width={400}
-                        height={200}
-                        style={{ border: '1px solid black', marginTop: '10px' }}
-                        onMouseDown={startDrawing}
-                        onMouseUp={endDrawing}
-                        onMouseMove={draw}
-                    ></canvas>
-                    <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
-                </div>
-            )}
-            {signedPdfUrl && (
-                <div className={styles.viewpdf}>
-                    {/* <button className={styles.Viewbtn}>
-                        <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
-                            View
-                        </a> */}
-                    {/* </button> */}
-                    <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
-                </div>
-            )}
+            {showCanvas && ( */}
+            <div className={styles.canvas_main_div}>
+                    <div className={styles.canvas_container}>
+                        <div className={styles.signature_div}>Signature :</div>
+                        <div> <canvas
+                            ref={canvasRef}
+                            // width={400}
+                            height={200}
+                            style={{ border: '1px solid black', marginTop: '10px',width:'100%' }}
+                            onMouseDown={startDrawing}
+                            onMouseUp={endDrawing}
+                            onMouseMove={draw}
+                        ></canvas></div>
+                   
+                        <div className={styles.signature_buttons}>
+                        <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
+                        {/* {clearVisible && (
+                            <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
+                        )} */}
+                            <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
+                    </div>
+                    
+                    {signedPdfUrl && (
+                        <div className={styles.viewpdf}>
+                            <div>
+                                <button className={styles.Viewbtn}>
+                                    <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
+                                        View Signed Pdf
+                                    </a>
+                                </button>
+                            </div>
+                            <div>
+                                <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
+                            </div>
+                        </div>
+                    )}
+                    </div>
+               
+            
+          
+         </div>
             {showModal && (
                 <div className={styles.modal} onClick={handleBackdropClick}>
                     <div className={styles.modal_content}>
@@ -291,10 +261,17 @@ const MainApp = () => {
                             <h2>Document Submitted <br></br>Successfully</h2>
                         </div>
 
-                        <div>
-                            <a href={signedPdfUrl} download="signed.pdf">
-                                <button className={styles.DownlaodPdf}>Download PDF</button>
-                            </a>
+                        <div className={styles.modal_button_div}>
+                            <div className={styles.modal_button}>
+                                <div className={styles.Viewpdf_doc}>
+                                    <button className={styles.DownlaodPdf}>  <a href={signedPdfUrl} download="signed.pdf">
+                                      Download PDF
+                                    </a></button>
+                                </div>
+                                <div>
+                                    <button className={styles.Finish} onClick={handleFinish}>Finish</button>
+                                </div>
+                            </div>  
                         </div>
                     </div>
                 </div>

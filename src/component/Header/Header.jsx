@@ -8,6 +8,7 @@ const Header = () => {
                 <img
                     className={styles.headerimg}
                     src={HeaderImg}
+                    alt='HeaderImg'
                 />
            </div>
         </header>
