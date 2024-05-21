@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     background-color: rgb(226, 226, 226);
-    margin-bottom: 20px;
+    margin-bottom: 0;
     height: 100%;
 }
 
@@ -13,8 +13,10 @@
     /* overflow: auto;F */
     /* border: 1px solid gray; */
     margin: 0;
+    padding: 20px 0;
     display: flex;
     justify-content: center;
+    background-color: #fff;
 }
 
 .sign {
@@ -29,6 +31,7 @@
 .signature_div {
     font-size: 18px;
     font-weight: 500;
+    padding-top: 30px;
 }
 
 .Clear {
@@ -71,13 +74,16 @@
 }
 
 .canvas_main_div {
+
     display: flex;
     width: 30%;
     margin-bottom: 20px;
-    margin: 40px 0;
-    padding: 0 15px;
+    margin: 0;
+    padding: 20px 15px 0 15px;
     position: sticky;
-    top: 80px;
+    top: 0;
+    border-left: 1px solid #ddd;
+    height: 100vh;
 
 }
 
@@ -223,6 +229,7 @@
     justify-content: center;
     align-items: flex-start;
     width: 100%;
+    background-color: #dadada;
 }
 
 .canvas {
@@ -237,6 +244,18 @@
     width: 100%;
 }
 
+.annotationLayer{
+    box-shadow: 0px 5px 20px 0px rgba(0,0,0,0.25);
+}
+
+.mobHeader{
+    display:none;
+}
+
+.desktopHeader{
+    display: block;
+}
+
 @media(max-width:991px) {
     .container_main_div {
         flex-direction: column;
@@ -247,6 +266,13 @@
     }
 
     .canvas_main_div {
-        width: 100%;
+        width: 60%;
+        margin:  0 auto;
+    }
+    .mobHeader{
+        display: block;
+    }
+    .desktopHeader{
+        display: none;
     }
 }

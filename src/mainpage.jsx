@@ -225,12 +225,15 @@ const MainApp = () => {
 
     return (
         <div className={styles.app} style={{ width: "100%" }}>
-            <Header />
+           
             {/* <input
                 type='file'
                 onChange={handleFileChange}
                 accept='application/pdf'
             /> */}
+            <div className={styles.mobHeader}>
+                <Header />
+            </div>
             <div className={styles.container_main_div}>
                 {file && (
                     <div className={styles.pdf_viewer}>
@@ -256,40 +259,48 @@ const MainApp = () => {
             )}
             {showCanvas && ( */}
                 <div className={styles.canvas_main_div}>
+                
                     <div className={styles.canvas_container}>
-                        <div className={styles.signature_div}>Signature :</div>
-                        <div> <canvas
-                            ref={canvasRef}
-                            // width={400}
-                            height={200}
-                           className={styles.canvas}
-                            onMouseDown={startDrawing}
-                            onMouseUp={endDrawing}
-                            onMouseMove={draw}
-                        ></canvas></div>
-
-                        <div className={styles.signature_buttons}>
-                            <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
-                            {/* {clearVisible && (
-                            <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
-                        )} */}
-                            <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
+                        <div className={styles.desktopHeader}>
+                            <Header />
                         </div>
+                        
+                        <div className={styles.rightBoxContent}>
+                            <div className={styles.signature_div}>Signature :</div>
+                            <div> <canvas
+                                ref={canvasRef}
+                                // width={400}
+                                height={200}
+                            className={styles.canvas}
+                                onMouseDown={startDrawing}
+                                onMouseUp={endDrawing}
+                                onMouseMove={draw}
+                            ></canvas></div>
 
-                        {signedPdfUrl && (
-                            <div className={styles.viewpdf}>
-                                <div>
-                                    <button className={styles.Viewbtn}>
-                                        <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
-                                            View Signed Pdf
-                                        </a>
-                                    </button>
-                                </div>
-                                <div>
-                                    <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
-                                </div>
+                            <div className={styles.signature_buttons}>
+                                <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
+                                {/* {clearVisible && (
+                                <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
+                            )} */}
+                                <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
                             </div>
-                        )}
+
+                            {signedPdfUrl && (
+                                <div className={styles.viewpdf}>
+                                    <div>
+                                        <button className={styles.Viewbtn}>
+                                            <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
+                                                View Signed Pdf
+                                            </a>
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        
                     </div>
 
 
@@ -298,6 +309,7 @@ const MainApp = () => {
            </div>
             {showModal && (
                 <div className={styles.modal} onClick={handleBackdropClick}>
+                     
                     <div className={styles.modal_content}>
                         <div className={styles.CloseButtonDiv}> <button className={styles.close} onClick={handleCloseModal}>Close</button></div>
                         <div className={styles.Content_doc}>
