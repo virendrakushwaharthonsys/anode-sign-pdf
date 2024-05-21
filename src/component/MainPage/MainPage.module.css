@@ -8,11 +8,11 @@
 }
 
 .pdf_viewer {
-    width: 900px;
+    width: 70%;
     height: auto;
-    overflow: auto;
+    /* overflow: auto;F */
     /* border: 1px solid gray; */
-    margin: 40px 0;
+    margin: 0;
     display: flex;
     justify-content: center;
 }
@@ -27,17 +27,17 @@
 }
 
 .signature_div {
-    font-size: 25px;
+    font-size: 18px;
     font-weight: 500;
 }
 
 .Clear {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
-    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 15px;
     border-radius: 5px;
 }
 
@@ -45,7 +45,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    width: 50%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -55,36 +55,42 @@
     margin-top: 10px;
     margin: 0 auto !important;
     width: 100%;
+    flex-direction: column;
 
 }
 
 .Save {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
-    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 15px;
     border-radius: 5px;
 
 }
 
 .canvas_main_div {
     display: flex;
-    width: 900px;
+    width: 30%;
     margin-bottom: 20px;
-
+    margin: 40px 0;
+    padding: 0 15px;
+    position: sticky;
+    top: 80px;
 
 }
 
 
 
 .viewpdf {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     width: 100%;
     display: flex;
     /* height: 50px; */
     justify-content: space-between;
+    flex-direction: column;
+
 
 }
 
@@ -96,20 +102,22 @@
 .Viewbtn {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
     color: white;
     border-radius: 5px;
+    margin-top: 15px;
 }
 
 .SubmitSign {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
+    margin-top: 15px;
 }
 
 .SubmitSign,
@@ -210,4 +218,35 @@
     margin-top: 10px;
 }
 
-.Viewpdf_doc {}
+.container_main_div {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.canvas {
+    border: 1px solid #888;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.pagesdetail {
+    width: 100%;
+}
+
+@media(max-width:991px) {
+    .container_main_div {
+        flex-direction: column;
+    }
+
+    .pdf_viewer {
+        width: 100%;
+    }
+
+    .canvas_main_div {
+        width: 100%;
+    }
+}
