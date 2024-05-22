@@ -8,9 +8,9 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
-import { BASE_URL } from '../../ApiConfig';
+import { API_BASE_URL, AUTH_TOKEN, BASE_URL, UUID } from '../../ApiConfig';
 import { Alert } from '@mui/material';
-import  AlertDialogSlide  from "../Confarmation-Box/Confermation"
+import AlertDialogSlide from "../Confarmation-Box/Confermation"
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const MainApp = () => {
@@ -23,6 +23,7 @@ const MainApp = () => {
     const [isDrawing, setIsDrawing] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showConFarmation, setShowConfermation] = useState(false);
+const [showSaveAlert, setShowSaveAlert] = useState(false);
     // const [clearVisible, setClearVisible] = useState(true);
     // const handleFileChange = (e) => {
     //     const selectedFile = e.target.files && e.target.files[0];
@@ -34,17 +35,16 @@ const MainApp = () => {
 
     // };
     // eslint-disable-next-line no-undef
-
     useEffect(() => {
-        handleFileChange(BASE_URL);
-    }, []);
-
-   
-   
-    const handleFileChange = async (pdfUrl) => {
-        if (pdfUrl) {
+        const fetchPdf = async () => {
+            const url = `${API_BASE_URL}${UUID}/`;
+            const headers = {
+                "Authorization": AUTH_TOKEN,
+                "Content-Type": "application/json"
+            };
             try {
-                const response = await fetch(pdfUrl);
+               
+                const response = await fetch(url, { headers, mode: 'cors' });
                 if (!response.ok) {
                     throw new Error('Failed to fetch PDF from the provided URL');
                 }
@@ -54,15 +54,38 @@ const MainApp = () => {
                 setSignedPdfUrl(null);
             } catch (error) {
                 console.error('Error fetching PDF:', error);
+
             }
-        }
-    };
+        };
+
+        fetchPdf();
+    }, []);
+
+
+
+
+    // const handleFileChange = async (pdfUrl) => {
+    //     if (pdfUrl) {
+    //         try {
+    //             const response = await fetch(pdfUrl);
+    //             if (!response.ok) {
+    //                 throw new Error('Failed to fetch PDF from the provided URL');
+    //             }
+    //             const pdfBlob = await response.blob();
+    //             setFile(URL.createObjectURL(pdfBlob));
+    //             setShowCanvas(false);
+    //             setSignedPdfUrl(null);
+    //         } catch (error) {
+    //             console.error('Error fetching PDF:', error);
+    //         }
+    //     }
+    // };
 
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
     };
-    
-    
+
+
     const startDrawing = (e) => {
         setIsDrawing(true);
         const canvas = canvasRef.current;
@@ -94,19 +117,28 @@ const MainApp = () => {
         ctx.stroke();
     };
 
-   
+
     const handleClearSignature = () => {
-      
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         setShowAlert(true);
     };
-  
 
+const isCanvasBlank = (canvas) => {
+    const ctx = canvas.getContext('2d');
+    const pixelBuffer = new Uint32Array(
+        ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer
+    );
+    return !pixelBuffer.some(color => color !== 0);
+};
     const handleSaveSignature = async () => {
         if (!file || !canvasRef.current) return;
-      
+if (isCanvasBlank(canvasRef.current)) {
+    setShowSaveAlert(true);
+    return;
+}
         try {
             const existingPdfBytes = await fetch(file).then(res => res.arrayBuffer());
             const pdfDoc = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
@@ -122,8 +154,8 @@ const MainApp = () => {
                 // Position the signature at the bottom right corner
                 const signatureWidth = 100;
                 const signatureHeight = 50;
-                const xPos = width - 150; 
-                const yPos = 50; 
+                const xPos = width - 150;
+                const yPos = 50;
                 page.drawImage(pngImage, {
                     x: xPos,
                     y: yPos,
@@ -138,14 +170,14 @@ const MainApp = () => {
             setSignedPdfBlob(modifiedBlob);
             const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
             setSignedPdfUrl(modifiedPdfUrl);
-           
+
         } catch (error) {
             console.error('Error saving signature:', error);
         }
     };
 
-   
-  
+
+
 
 
 
@@ -163,15 +195,15 @@ const MainApp = () => {
             const formData = new FormData();
             formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
 
-            const response = await fetch('http://localhost:3008/upload', {
-                method: 'POST',
-                mode: 'cors',
-                body: formData,
-            });
+            // const response = await fetch('http://localhost:3008/upload', {
+            //     method: 'POST',
+            //     mode: 'cors',
+            //     body: formData,
+            // });
 
-            if (!response.ok) {
-                throw new Error('Failed to upload signed PDF');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Failed to upload signed PDF');
+            // }
 
             console.log('Signed PDF uploaded successfully');
             setShowConfermation(true)
@@ -183,7 +215,7 @@ const MainApp = () => {
 
     return (
         <div className={styles.app} style={{ width: "100%" }}>
-           
+
             {/* <input
                 type='file'
                 onChange={handleFileChange}
@@ -205,7 +237,7 @@ const MainApp = () => {
                                     <Page
                                         key={`page_${index + 1}`}
                                         pageNumber={index + 1}
-                                      className={styles.pagesdetail}
+                                        className={styles.pagesdetail}
                                     />
                                 ),
                             )}
@@ -217,19 +249,19 @@ const MainApp = () => {
             )}
             {showCanvas && ( */}
                 <div className={styles.canvas_main_div}>
-                
+
                     <div className={styles.canvas_container}>
                         <div className={styles.desktopHeader}>
                             <Header />
                         </div>
-                        
+
                         <div className={styles.rightBoxContent}>
                             <div className={styles.signature_div}>Signature :</div>
                             <div> <canvas
                                 ref={canvasRef}
                                 // width={400}
                                 height={200}
-                            className={styles.canvas}
+                                className={styles.canvas}
                                 onMouseDown={startDrawing}
                                 onMouseUp={endDrawing}
                                 onMouseMove={draw}
@@ -239,14 +271,22 @@ const MainApp = () => {
                                 <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
                                 {showAlert && (
                                     <div className={styles.alertdiv} >
-                                        <Alert severity="success" sx={{height:"36px",width:"300px"}} onClose={() => setShowAlert(false)}>
+                                        <Alert severity="success" sx={{ height: "36px", width: "300px" }} onClose={() => setShowAlert(false)}>
                                             Signature cleared successfully.
                                         </Alert>
                                     </div>
                                 )}
                                 <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
-                              
-                              
+    {
+        showSaveAlert && (
+            <div className={styles.alertdiv_two}>
+                <Alert severity="error" sx={{ height: "36px", width: "330px" }} onClose={() => setShowSaveAlert(false)}>
+                    Please add a signature before saving.
+                </Alert>
+            </div>
+        )
+    }
+
                             </div>
 
                             {signedPdfUrl && (
@@ -259,7 +299,7 @@ const MainApp = () => {
                                         </button>
                                     </div>
                                     <div>
-                                       
+
                                         <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
                                         {setShowConfermation && (
                                             <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} />
@@ -268,14 +308,14 @@ const MainApp = () => {
                                 </div>
                             )}
                         </div>
-                        
+
                     </div>
 
 
 
                 </div>
-           </div>
-          
+            </div>
+
         </div>
     );
 };
