@@ -6,10 +6,11 @@ import { PDFDocument } from 'pdf-lib';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
-import Header from "./component/Header/Header";
-
-import styles from "./component/MainPage/MainPage.module.css"
-import { BASE_URL } from './ApiConfig';
+import Header from "../Header/Header";
+import styles from "./MainPage.module.css"
+import { BASE_URL } from '../../ApiConfig';
+import { Alert } from '@mui/material';
+import  AlertDialogSlide  from "../Confarmation-Box/Confermation"
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const MainApp = () => {
@@ -20,7 +21,8 @@ const MainApp = () => {
     const [signedPdfUrl, setSignedPdfUrl] = useState(null);
     const [signedPdfBlob, setSignedPdfBlob] = useState(null);
     const [isDrawing, setIsDrawing] = useState(false);
-    const [showModal, setShowModal] = useState(false);
+    const [showAlert, setShowAlert] = useState(false);
+    const [showConFarmation, setShowConfermation] = useState(false);
     // const [clearVisible, setClearVisible] = useState(true);
     // const handleFileChange = (e) => {
     //     const selectedFile = e.target.files && e.target.files[0];
@@ -37,17 +39,8 @@ const MainApp = () => {
         handleFileChange(BASE_URL);
     }, []);
 
-    const handleCloseModal = () => {
-        setShowModal(false);
-    };
-    const handleFinish = () => {
-        window.location.reload();
-    };
-    const handleBackdropClick = (e) => {
-        if (e.target === e.currentTarget) {
-            setShowModal(false);
-        }
-    };
+   
+   
     const handleFileChange = async (pdfUrl) => {
         if (pdfUrl) {
             try {
@@ -68,38 +61,52 @@ const MainApp = () => {
     const onDocumentLoadSuccess = ({ numPages }) => {
         setNumPages(numPages);
     };
-
+    
+    
     const startDrawing = (e) => {
         setIsDrawing(true);
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
         ctx.beginPath();
-        ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        ctx.moveTo(x, y);
     };
 
     const endDrawing = () => {
         setIsDrawing(false);
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        ctx.closePath();
     };
 
     const draw = (e) => {
         if (!isDrawing || !canvasRef.current) return;
+
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
-        ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+        const rect = canvas.getBoundingClientRect();
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+        ctx.lineTo(x, y);
         ctx.stroke();
     };
 
-    // const handleSignButtonClick = () => {
-    //     setShowCanvas(true);
-    // };
+   
     const handleClearSignature = () => {
+      
         const canvas = canvasRef.current;
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        setShowAlert(true);
     };
+  
+
     const handleSaveSignature = async () => {
         if (!file || !canvasRef.current) return;
-
+      
         try {
             const existingPdfBytes = await fetch(file).then(res => res.arrayBuffer());
             const pdfDoc = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
@@ -110,14 +117,13 @@ const MainApp = () => {
                 const signatureData = canvasRef.current.toDataURL('image/png');
                 const pngImage = await pdfDoc.embedPng(signatureData);
 
-                const { width, height } = page.getSize();
+                const { width } = page.getSize();
 
                 // Position the signature at the bottom right corner
                 const signatureWidth = 100;
                 const signatureHeight = 50;
-                const xPos = width - 150; // 150px from the right edge
-                const yPos = 50; // 50px from the bottom edge
-
+                const xPos = width - 150; 
+                const yPos = 50; 
                 page.drawImage(pngImage, {
                     x: xPos,
                     y: yPos,
@@ -126,69 +132,20 @@ const MainApp = () => {
                 });
             }
 
-            // Save modified PDF and update state
             const modifiedPdfBytes = await pdfDoc.save();
             const modifiedBlob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
 
             setSignedPdfBlob(modifiedBlob);
             const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
             setSignedPdfUrl(modifiedPdfUrl);
+           
         } catch (error) {
             console.error('Error saving signature:', error);
         }
     };
 
-    // const handleSaveSignature = async () => {
-    //     if (!file || !canvasRef.current) return;
-
-    //     try {
-    //         const existingPdfBytes = await fetch(file).then(res => res.arrayBuffer());
-    //         const pdfDoc = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
-    //         // await pdfDoc.save({ updateFieldAppearances: false })
-    //         const pages = pdfDoc.getPages();
-
-    //         for (let i = 0; i < pages.length; i++) {
-    //             const page = pages[i];
-
-
-    //             const signatureData = canvasRef.current.toDataURL('image/png');
-    //             const pngImage = await pdfDoc.embedPng(signatureData);
-
-    //             const extraSpace = 100;
-    //             const { width, height } = page.getSize();
-
-
-    //             page.setSize(width, height + extraSpace);
-
-
-    //             page.translateContent(0, extraSpace);
-
-
-    //             const signatureWidth = 100;
-    //             const signatureHeight = 50;
-    //             const xPos = 470;
-    //             const yPos = 50;
-    //             page.drawImage(pngImage, {
-    //                 x: xPos,
-    //                 y: -yPos,
-    //                 width: signatureWidth,
-    //                 height: signatureHeight,
-    //             });
-    //         }
-
-    //         // Save modified PDF and update state
-    //         const modifiedPdfBytes = await pdfDoc.save();
-    //         const modifiedBlob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
-
-    //         setSignedPdfBlob(modifiedBlob);
-    //         const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
-    //         setSignedPdfUrl(modifiedPdfUrl);
-    //         // setClearVisible(false);
-    //     } catch (error) {
-    //         console.error('Error saving signature:', error);
-    //     }
-    // };
-
+   
+  
 
 
 
@@ -217,7 +174,8 @@ const MainApp = () => {
             }
 
             console.log('Signed PDF uploaded successfully');
-            setShowModal(true);
+            setShowConfermation(true)
+            // setShowModal(true);
         } catch (error) {
             console.error('Error uploading signed PDF:', error);
         }
@@ -279,10 +237,16 @@ const MainApp = () => {
 
                             <div className={styles.signature_buttons}>
                                 <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
-                                {/* {clearVisible && (
-                                <button className={styles.Clear} onClick={handleClearSignature}>Clear Signature</button>
-                            )} */}
+                                {showAlert && (
+                                    <div className={styles.alertdiv} >
+                                        <Alert severity="success" sx={{height:"36px",width:"300px"}} onClose={() => setShowAlert(false)}>
+                                            Signature cleared successfully.
+                                        </Alert>
+                                    </div>
+                                )}
                                 <button className={styles.Save} onClick={handleSaveSignature}>Save Signature</button>
+                              
+                              
                             </div>
 
                             {signedPdfUrl && (
@@ -295,7 +259,11 @@ const MainApp = () => {
                                         </button>
                                     </div>
                                     <div>
+                                       
                                         <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
+                                        {setShowConfermation && (
+                                            <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} />
+                                        )}
                                     </div>
                                 </div>
                             )}
@@ -307,30 +275,7 @@ const MainApp = () => {
 
                 </div>
            </div>
-            {showModal && (
-                <div className={styles.modal} onClick={handleBackdropClick}>
-                     
-                    <div className={styles.modal_content}>
-                        <div className={styles.CloseButtonDiv}> <button className={styles.close} onClick={handleCloseModal}>Close</button></div>
-                        <div className={styles.Content_doc}>
-                            <h2>Document Submitted <br></br>Successfully</h2>
-                        </div>
-
-                        <div className={styles.modal_button_div}>
-                            <div className={styles.modal_button}>
-                                <div className={styles.Viewpdf_doc}>
-                                    <button className={styles.DownlaodPdf}>  <a href={signedPdfUrl} download="signed.pdf">
-                                        Download PDF
-                                    </a></button>
-                                </div>
-                                <div>
-                                    <button className={styles.Finish} onClick={handleFinish}>Finish</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
+          
         </div>
     );
 };

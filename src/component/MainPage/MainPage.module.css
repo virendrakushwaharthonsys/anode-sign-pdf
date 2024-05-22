@@ -149,8 +149,8 @@
     background-color: #15049e;
     color: white;
     width: 150px;
-    height: 50px;
-    font-size: 15px;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
 }
 
@@ -163,8 +163,8 @@
     background-color: #15049e;
     color: white;
     width: 150px;
-    height: 50px;
-    font-size: 15px;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
 }
 
@@ -190,11 +190,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: gray;
+    /* background: gray; */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
+    z-index: 9999;
 }
 
 .modal_content {
@@ -204,6 +205,7 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    z-index: 10000;
 }
 
 .CloseButtonDiv {
@@ -240,19 +242,28 @@
     background-color: #fff;
 }
 
+.alertdiv {
+    position: absolute;
+    top: 50px;
+    margin-left: -350px;
+    width: 400px;
+    height: 30px;
+}
+
 .pagesdetail {
     width: 100%;
+    z-index: 0;
 }
 
-.annotationLayer{
-    box-shadow: 0px 5px 20px 0px rgba(0,0,0,0.25);
+.annotationLayer {
+    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.25);
 }
 
-.mobHeader{
-    display:none;
+.mobHeader {
+    display: none;
 }
 
-.desktopHeader{
+.desktopHeader {
     display: block;
 }
 
@@ -267,12 +278,14 @@
 
     .canvas_main_div {
         width: 60%;
-        margin:  0 auto;
+        margin: 0 auto;
     }
-    .mobHeader{
+
+    .mobHeader {
         display: block;
     }
-    .desktopHeader{
+
+    .desktopHeader {
         display: none;
     }
 }
