@@ -65,7 +65,6 @@ const MainApp = () => {
                 setSignedPdfUrl(null);
             } catch (error) {
                 console.error('Error fetching PDF:', error);
-                setError('Failed to fetch PDF from the provided URL');
             }
         };
 
@@ -237,21 +236,30 @@ const isCanvasBlank = (canvas) => {
                 <Header />
             </div>
             <div className={styles.container_main_div}>
-                {error ? (
-                    <div className={styles.error}>{error}</div>
-                ) : (
-                    file && (
-                        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-                            {Array.from(new Array(numPages), (el, index) => (
-                                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
-                            ))}
+                {file && (
+                    <div className={styles.pdf_viewer}>
+                        <Document
+                            file={file}
+                            onLoadSuccess={onDocumentLoadSuccess}
+                            
+                        >
+                            {Array.from(
+                                new Array(numPages),
+                                (el, index) => (
+                                    <Page
+                                        key={`page_${index + 1}`}
+                                        pageNumber={index + 1}
+                                        className={styles.pagesdetail}
+                                    />
+                                ),
+                            )}
                         </Document>
-                    )
-                
-
-                   
+                    </div>
                 )}
-              
+                {/* {!signedPdfUrl && (
+                <button onClick={handleSignButtonClick} className={styles.sign}>Sign</button>
+            )}
+            {showCanvas && ( */}
                 <div className={styles.canvas_main_div}>
 
                     <div className={styles.canvas_container}>

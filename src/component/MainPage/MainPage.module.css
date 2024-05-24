@@ -168,12 +168,6 @@
     border-radius: 5px;
 }
 
-.error {
-    color: red;
-    font-weight: bold;
-    margin: 160px;
-}
-
 .modal_button_div {
     display: flex;
     justify-content: space-around;
