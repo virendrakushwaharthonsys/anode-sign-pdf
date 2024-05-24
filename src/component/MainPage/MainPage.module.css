@@ -3,18 +3,20 @@
     flex-direction: column;
     align-items: center;
     background-color: rgb(226, 226, 226);
-    margin-bottom: 20px;
+    margin-bottom: 0;
     height: 100%;
 }
 
 .pdf_viewer {
-    width: 900px;
+    width: 70%;
     height: auto;
-    overflow: auto;
+    /* overflow: auto;F */
     /* border: 1px solid gray; */
-    margin: 40px 0;
+    margin: 0;
+    padding: 20px 0;
     display: flex;
     justify-content: center;
+    background-color: #fff;
 }
 
 .sign {
@@ -27,17 +29,18 @@
 }
 
 .signature_div {
-    font-size: 25px;
+    font-size: 18px;
     font-weight: 500;
+    padding-top: 30px;
 }
 
 .Clear {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
-    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 15px;
     border-radius: 5px;
 }
 
@@ -45,7 +48,7 @@
     display: flex;
     flex-direction: column;
     margin-top: 20px;
-    width: 50%;
+    width: 100%;
     margin: 0 auto;
 }
 
@@ -55,36 +58,45 @@
     margin-top: 10px;
     margin: 0 auto !important;
     width: 100%;
+    flex-direction: column;
 
 }
 
 .Save {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
-    margin-top: 20px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    margin-top: 15px;
     border-radius: 5px;
 
 }
 
 .canvas_main_div {
-    display: flex;
-    width: 900px;
-    margin-bottom: 20px;
 
+    display: flex;
+    width: 30%;
+    margin-bottom: 20px;
+    margin: 0;
+    padding: 20px 15px 0 15px;
+    position: sticky;
+    top: 0;
+    border-left: 1px solid #ddd;
+    height: 100vh;
 
 }
 
 
 
 .viewpdf {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     width: 100%;
     display: flex;
     /* height: 50px; */
     justify-content: space-between;
+    flex-direction: column;
+
 
 }
 
@@ -96,20 +108,22 @@
 .Viewbtn {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
     color: white;
     border-radius: 5px;
+    margin-top: 15px;
 }
 
 .SubmitSign {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
+    margin-top: 15px;
 }
 
 .SubmitSign,
@@ -134,9 +148,9 @@
 .DownlaodPdf {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 130px;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
 }
 
@@ -148,9 +162,9 @@
 .Finish {
     background-color: #15049e;
     color: white;
-    width: 150px;
-    height: 50px;
-    font-size: 15px;
+    width: 130px;
+    height: 40px;
+    font-size: 14px;
     border-radius: 5px;
 }
 
@@ -159,15 +173,15 @@
     justify-content: space-around;
     width: 100%;
     align-items: center;
-    margin-top: 50px;
+    margin-top: -5px;
 }
 
 .modal_button {
     display: flex;
     justify-content: space-around;
-    width: 80%;
+    width: 60%;
 
-    margin-top: 50px;
+    margin-top: 30px;
 }
 
 .modal {
@@ -176,11 +190,12 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: gray;
+    /* background: gray; */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2000;
+    z-index: 9999;
 }
 
 .modal_content {
@@ -190,6 +205,7 @@
     padding: 20px;
     border-radius: 8px;
     text-align: center;
+    z-index: 10000;
 }
 
 .CloseButtonDiv {
@@ -210,4 +226,74 @@
     margin-top: 10px;
 }
 
-.Viewpdf_doc {}
+.container_main_div {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    background-color: #dadada;
+}
+
+.canvas {
+    border: 1px solid #888;
+    margin-top: 10px;
+    width: 100%;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+.alertdiv {
+    position: absolute;
+    top: 50px;
+    margin-left: -350px;
+    width: 400px;
+    height: 30px;
+}
+
+.alertdiv_two {
+    position: absolute;
+    top: 50px;
+    margin-left: -380px;
+    width: 400px;
+    height: 30px;
+}
+
+.pagesdetail {
+    width: 100%;
+    z-index: 0;
+}
+
+.annotationLayer {
+    box-shadow: 0px 5px 20px 0px rgba(0, 0, 0, 0.25);
+}
+
+.mobHeader {
+    display: none;
+}
+
+.desktopHeader {
+    display: block;
+}
+
+@media(max-width:991px) {
+    .container_main_div {
+        flex-direction: column;
+    }
+
+    .pdf_viewer {
+        width: 100%;
+    }
+
+    .canvas_main_div {
+        width: 60%;
+        margin: 0 auto;
+    }
+
+    .mobHeader {
+        display: block;
+    }
+
+    .desktopHeader {
+        display: none;
+    }
+}
