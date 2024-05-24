@@ -8,11 +8,11 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
-import { API_BASE_URL, AUTH_TOKEN, BASE_URL, UUID } from '../../ApiConfig';
+import { API_BASE_URL, AUTH_TOKEN, UUID } from '../../ApiConfig';
 import { Alert } from '@mui/material';
 import AlertDialogSlide from "../Confarmation-Box/Confermation"
-pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
-
+// pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 const MainApp = () => {
     const [file, setFile] = useState(null);
     const [numPages, setNumPages] = useState(null);
@@ -43,23 +43,31 @@ const [showSaveAlert, setShowSaveAlert] = useState(false);
                 "Content-Type": "application/json"
             };
             try {
-               
                 const response = await fetch(url, { headers, mode: 'cors' });
                 if (!response.ok) {
                     throw new Error('Failed to fetch PDF from the provided URL');
                 }
-                const pdfBlob = await response.blob();
+                const responseData = await response.json();
+                const pdfUrl = responseData.field_pdf;
+                if (!pdfUrl) {
+                    throw new Error('PDF URL not found in the response');
+                }
+                const pdfResponse = await fetch(pdfUrl);
+                if (!pdfResponse.ok) {
+                    throw new Error('Failed to fetch PDF from the provided URL');
+                }
+                const pdfBlob = await pdfResponse.blob();
                 setFile(URL.createObjectURL(pdfBlob));
                 setShowCanvas(false);
                 setSignedPdfUrl(null);
             } catch (error) {
                 console.error('Error fetching PDF:', error);
-
             }
         };
 
         fetchPdf();
     }, []);
+
 
 
 
@@ -134,11 +142,11 @@ const isCanvasBlank = (canvas) => {
     return !pixelBuffer.some(color => color !== 0);
 };
     const handleSaveSignature = async () => {
-        if (!file || !canvasRef.current) return;
-if (isCanvasBlank(canvasRef.current)) {
-    setShowSaveAlert(true);
-    return;
-}
+                        if (!file || !canvasRef.current) return;
+                if (isCanvasBlank(canvasRef.current)) {
+                    setShowSaveAlert(true);
+                    return;
+                }
         try {
             const existingPdfBytes = await fetch(file).then(res => res.arrayBuffer());
             const pdfDoc = await PDFDocument.load(existingPdfBytes, { ignoreEncryption: true });
@@ -154,8 +162,8 @@ if (isCanvasBlank(canvasRef.current)) {
                 // Position the signature at the bottom right corner
                 const signatureWidth = 100;
                 const signatureHeight = 50;
-                const xPos = width - 150;
-                const yPos = 50;
+                const xPos = width - 100;
+                const yPos = 5;
                 page.drawImage(pngImage, {
                     x: xPos,
                     y: yPos,
@@ -230,6 +238,7 @@ if (isCanvasBlank(canvasRef.current)) {
                         <Document
                             file={file}
                             onLoadSuccess={onDocumentLoadSuccess}
+                            
                         >
                             {Array.from(
                                 new Array(numPages),
