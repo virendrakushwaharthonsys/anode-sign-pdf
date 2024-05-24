@@ -8,9 +8,10 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
-import { API_BASE_URL, AUTH_TOKEN, UUID } from '../../ApiConfig';
+import { API_BASE_URL, AUTH_TOKEN } from '../../ApiConfig';
 import { Alert } from '@mui/material';
 import AlertDialogSlide from "../Confarmation-Box/Confermation"
+import { useParams } from 'react-router-dom'; 
 // pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 const MainApp = () => {
@@ -23,8 +24,10 @@ const MainApp = () => {
     const [isDrawing, setIsDrawing] = useState(false);
     const [showAlert, setShowAlert] = useState(false);
     const [showConFarmation, setShowConfermation] = useState(false);
-const [showSaveAlert, setShowSaveAlert] = useState(false);
-    // const [clearVisible, setClearVisible] = useState(true);
+    const [showSaveAlert, setShowSaveAlert] = useState(false);
+    const { uuid } = useParams();
+    const [error, setError] = useState(null);
+
     // const handleFileChange = (e) => {
     //     const selectedFile = e.target.files && e.target.files[0];
     //     if (selectedFile) {
@@ -37,7 +40,7 @@ const [showSaveAlert, setShowSaveAlert] = useState(false);
     // eslint-disable-next-line no-undef
     useEffect(() => {
         const fetchPdf = async () => {
-            const url = `${API_BASE_URL}${UUID}/`;
+            const url = `${API_BASE_URL}${uuid}/`;
             const headers = {
                 "Authorization": AUTH_TOKEN,
                 "Content-Type": "application/json"
@@ -62,11 +65,12 @@ const [showSaveAlert, setShowSaveAlert] = useState(false);
                 setSignedPdfUrl(null);
             } catch (error) {
                 console.error('Error fetching PDF:', error);
+                setError('Failed to fetch PDF from the provided URL');
             }
         };
 
         fetchPdf();
-    }, []);
+    }, [uuid]);
 
 
 
@@ -233,30 +237,21 @@ const isCanvasBlank = (canvas) => {
                 <Header />
             </div>
             <div className={styles.container_main_div}>
-                {file && (
-                    <div className={styles.pdf_viewer}>
-                        <Document
-                            file={file}
-                            onLoadSuccess={onDocumentLoadSuccess}
-                            
-                        >
-                            {Array.from(
-                                new Array(numPages),
-                                (el, index) => (
-                                    <Page
-                                        key={`page_${index + 1}`}
-                                        pageNumber={index + 1}
-                                        className={styles.pagesdetail}
-                                    />
-                                ),
-                            )}
+                {error ? (
+                    <div className={styles.error}>{error}</div>
+                ) : (
+                    file && (
+                        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                            {Array.from(new Array(numPages), (el, index) => (
+                                <Page key={`page_${index + 1}`} pageNumber={index + 1} />
+                            ))}
                         </Document>
-                    </div>
+                    )
+                
+
+                   
                 )}
-                {/* {!signedPdfUrl && (
-                <button onClick={handleSignButtonClick} className={styles.sign}>Sign</button>
-            )}
-            {showCanvas && ( */}
+              
                 <div className={styles.canvas_main_div}>
 
                     <div className={styles.canvas_container}>
