@@ -6,4 +6,6 @@
 
 export const API_BASE_URL = "https://rest.uat.godaylight.com/api/v1/contract/detail/"
 // export const UUID = "825149d4-0cca-476b-8827-0342828f4f1c"
+export const SUBMIT_URL =`https://rest.uat.godaylight.com/api/v1/contract/update/`
 export const AUTH_TOKEN = `bearer ${"2652djhag5425ddjhdeep855765fhfg"}`
+  

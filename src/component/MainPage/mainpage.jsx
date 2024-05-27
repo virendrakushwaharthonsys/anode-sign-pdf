@@ -7,7 +7,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
-import { API_BASE_URL, AUTH_TOKEN } from '../../ApiConfig';
+import { API_BASE_URL, AUTH_TOKEN, SUBMIT_URL } from '../../ApiConfig';
 import { Alert } from '@mui/material';
 import AlertDialogSlide from "../Confarmation-Box/Confermation"
 import { useParams } from 'react-router-dom';
@@ -149,12 +149,12 @@ const MainApp = () => {
             setSignedPdfBlob(modifiedBlob);
             const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
             setSignedPdfUrl(modifiedPdfUrl);
+           
 
         } catch (error) {
             console.error('Error saving signature:', error);
         }
     };
-
     const handleSubmit = async () => {
         if (!signedPdfBlob) {
             console.error('No signed PDF available for submission');
@@ -162,16 +162,37 @@ const MainApp = () => {
         }
 
         try {
+           
             const formData = new FormData();
+           
             formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
+          
 
-            console.log('Signed PDF uploaded successfully');
-            setShowConfermation(true);
+            
+
+            const apiUrl = `${SUBMIT_URL}${uuid}/`;
+            const headers = {
+                Authorization: AUTH_TOKEN,
+            };
+            const response = await fetch(apiUrl, {
+                method: 'PUT',
+                headers,
+                body: formData,
+            });
+
+            if (response.ok) {
+                console.log(formData,"gfxcjyfutydf")
+                console.log('Signed PDF uploaded successfully');
+                setShowConfermation(true);
+                
+            } else {
+                console.error('Failed to upload signed PDF');
+            }
         } catch (error) {
             console.error('Error uploading signed PDF:', error);
         }
     };
-
+   
     return (
         <div className={styles.app} style={{ width: "100%" }}>
             <div className={styles.mobHeader}>
