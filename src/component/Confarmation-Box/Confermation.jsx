@@ -4,7 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import CircularProgress from '@mui/material/CircularProgress'; // Import the loader component
+import CircularProgress from '@mui/material/CircularProgress'; 
 import styles from "../MainPage/MainPage.module.css";
 import { AUTH_TOKEN, SUBMIT_URL } from '../../ApiConfig';
 import { useParams } from 'react-router-dom';
@@ -15,7 +15,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 
 const AlertDialogSlide = ({ open, handleClose, signedPdfBlob, signedPdfUrl }) => {
     const [showModal, setShowModal] = useState(false);
-    const [loading, setLoading] = useState(false); // State to manage loading
+    const [loading, setLoading] = useState(false); 
 
     const handleCloseModal = () => {
         setShowModal(false);
@@ -43,8 +43,8 @@ const AlertDialogSlide = ({ open, handleClose, signedPdfBlob, signedPdfUrl }) =>
 
         try {
             const formData = new FormData();
-            formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
-
+            formData.append('sign_pdf', signedPdfBlob, 'signed.pdf');
+            // formData.append('pdf', '1');
             const apiUrl = `${SUBMIT_URL}${uuid}/`;
             const headers = {
                 Authorization: AUTH_TOKEN,

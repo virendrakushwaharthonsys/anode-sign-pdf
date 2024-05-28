@@ -4,7 +4,7 @@ import { PDFDocument } from 'pdf-lib';
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
 import { API_BASE_URL, AUTH_TOKEN } from '../../ApiConfig';
