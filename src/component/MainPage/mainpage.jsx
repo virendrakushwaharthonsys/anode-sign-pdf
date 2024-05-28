@@ -4,10 +4,10 @@ import { PDFDocument } from 'pdf-lib';
 
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
+// import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
-import { API_BASE_URL, AUTH_TOKEN, SUBMIT_URL } from '../../ApiConfig';
+import { API_BASE_URL, AUTH_TOKEN } from '../../ApiConfig';
 import { Alert } from '@mui/material';
 import AlertDialogSlide from "../Confarmation-Box/Confermation"
 import { useParams } from 'react-router-dom';
@@ -113,6 +113,8 @@ const MainApp = () => {
         return !pixelBuffer.some(color => color !== 0);
     };
 
+  
+   
     const handleSaveSignature = async () => {
         if (!file || !canvasRef.current) return;
         if (isCanvasBlank(canvasRef.current)) {
@@ -146,53 +148,23 @@ const MainApp = () => {
             const modifiedPdfBytes = await pdfDoc.save();
             const modifiedBlob = new Blob([modifiedPdfBytes], { type: 'application/pdf' });
 
+            // Verify the blob is correctly created
+            console.log('signedPdfBlob:', modifiedBlob);
+
             setSignedPdfBlob(modifiedBlob);
             const modifiedPdfUrl = URL.createObjectURL(modifiedBlob);
             setSignedPdfUrl(modifiedPdfUrl);
-           
 
         } catch (error) {
             console.error('Error saving signature:', error);
         }
     };
     const handleSubmit = async () => {
-        if (!signedPdfBlob) {
-            console.error('No signed PDF available for submission');
-            return;
-        }
+        setShowConfermation(true);
+    }
+  
 
-        try {
-           
-            const formData = new FormData();
-           
-            formData.append('signedPdf', signedPdfBlob, 'signed.pdf');
-          
 
-            
-
-            const apiUrl = `${SUBMIT_URL}${uuid}/`;
-            const headers = {
-                Authorization: AUTH_TOKEN,
-            };
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                headers,
-                body: formData,
-            });
-
-            if (response.ok) {
-                console.log(formData,"gfxcjyfutydf")
-                console.log('Signed PDF uploaded successfully');
-                setShowConfermation(true);
-                
-            } else {
-                console.error('Failed to upload signed PDF');
-            }
-        } catch (error) {
-            console.error('Error uploading signed PDF:', error);
-        }
-    };
-   
     return (
         <div className={styles.app} style={{ width: "100%" }}>
             <div className={styles.mobHeader}>
@@ -262,7 +234,7 @@ const MainApp = () => {
                                                 <div>
                                                     <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
                                                     {setShowConfermation && (
-                                                        <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} />
+                                                            <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} signedPdfBlob={signedPdfBlob} />
                                                     )}
                                                 </div>
                                             </div>
