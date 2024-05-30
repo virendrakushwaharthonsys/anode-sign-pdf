@@ -8,11 +8,11 @@ import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry';
 import Header from "../Header/Header";
 import styles from "./MainPage.module.css"
 import { API_BASE_URL, AUTH_TOKEN } from '../../ApiConfig';
-import { Alert } from '@mui/material';
+import { Alert, CircularProgress } from '@mui/material';
 import AlertDialogSlide from "../Confarmation-Box/Confermation"
 import { useParams } from 'react-router-dom';
 import ErrorComponent from '../Error/Error';
-
+import logoLoader from "../../Asset/images/Logo.gif"
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/legacy/build/pdf.worker.min.js`;
 
 const MainApp = () => {
@@ -28,9 +28,10 @@ const MainApp = () => {
     const [showSaveAlert, setShowSaveAlert] = useState(false);
     const { uuid } = useParams();
     const [error, setError] = useState(null);
-
+    const [loading, setLoading] = useState(false); 
     useEffect(() => {
         const fetchPdf = async () => {
+            setLoading(true); // Set loading to true just before API call
             const url = `${API_BASE_URL}${uuid}/`;
             const headers = {
                 "Authorization": AUTH_TOKEN,
@@ -57,6 +58,8 @@ const MainApp = () => {
             } catch (error) {
                 console.error('Error fetching PDF:', error);
                 setError('Failed to fetch PDF from the provided URL');
+            } finally {
+                setLoading(false); // Set loading to false after fetch completes
             }
         };
 
@@ -162,7 +165,12 @@ const MainApp = () => {
     const handleSubmit = async () => {
         setShowConfermation(true);
     }
-  
+    const loaderStyle = {
+        position: 'fixed',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+    };
 
 
     return (
@@ -171,23 +179,27 @@ const MainApp = () => {
                 <Header />
             </div>
             <div className={styles.container_main_div}>
-                {error ? (
+                {loading ? ( 
+                    <div style={loaderStyle}>
+                        <img src={logoLoader} alt="Loading..." />
+                    </div>
+                ) : error ? (
                     <ErrorComponent message={error} />
                 ) : (
                     file && (
                         <>
                             <div className={styles.pdf_viewer}>
-                                    <div className={styles.pdf_small_div} >
-                                        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-                                            {Array.from(new Array(numPages), (el, index) => (
-                                                <Page
-                                                    key={`page_${index + 1}`}
-                                                    pageNumber={index + 1}
-                                                    className={styles.pagesdetail}
-                                                />
-                                            ))}
-                                        </Document>
-                              </div>
+                                <div className={styles.pdf_small_div} >
+                                    <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                                        {Array.from(new Array(numPages), (el, index) => (
+                                            <Page
+                                                key={`page_${index + 1}`}
+                                                pageNumber={index + 1}
+                                                className={styles.pagesdetail}
+                                            />
+                                        ))}
+                                    </Document>
+                                </div>
                             </div>
                             <div className={styles.canvas_main_div}>
                                 <div className={styles.canvas_container}>
@@ -227,17 +239,17 @@ const MainApp = () => {
                                         {signedPdfUrl && (
                                             <div className={styles.viewpdf}>
                                                 {/* <div className={styles.view_button_div}> */}
-                                                    <button className={styles.Viewbtn}>
-                                                        <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
-                                                            View Signed Pdf
-                                                        </a>
-                                                    </button>
+                                                <button className={styles.Viewbtn}>
+                                                    <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
+                                                        View Signed Pdf
+                                                    </a>
+                                                </button>
                                                 {/* </div> */}
-                                                    {/* <div className={styles.Submit_div}> */}
-                                                    <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
-                                                    {setShowConfermation && (
-                                                            <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} signedPdfBlob={signedPdfBlob} />
-                                                    )}
+                                                {/* <div className={styles.Submit_div}> */}
+                                                <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
+                                                {setShowConfermation && (
+                                                    <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} signedPdfBlob={signedPdfBlob} />
+                                                )}
                                                 {/* </div> */}
                                             </div>
                                         )}
