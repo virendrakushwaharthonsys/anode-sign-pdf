@@ -177,15 +177,17 @@ const MainApp = () => {
                     file && (
                         <>
                             <div className={styles.pdf_viewer}>
-                                <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-                                    {Array.from(new Array(numPages), (el, index) => (
-                                        <Page
-                                            key={`page_${index + 1}`}
-                                            pageNumber={index + 1}
-                                            className={styles.pagesdetail}
-                                        />
-                                    ))}
-                                </Document>
+                                    <div className={styles.pdf_small_div} >
+                                        <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
+                                            {Array.from(new Array(numPages), (el, index) => (
+                                                <Page
+                                                    key={`page_${index + 1}`}
+                                                    pageNumber={index + 1}
+                                                    className={styles.pagesdetail}
+                                                />
+                                            ))}
+                                        </Document>
+                              </div>
                             </div>
                             <div className={styles.canvas_main_div}>
                                 <div className={styles.canvas_container}>
