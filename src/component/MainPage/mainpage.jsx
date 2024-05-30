@@ -224,19 +224,19 @@ const MainApp = () => {
                                         </div>
                                         {signedPdfUrl && (
                                             <div className={styles.viewpdf}>
-                                                <div className={styles.view_button_div}>
+                                                {/* <div className={styles.view_button_div}> */}
                                                     <button className={styles.Viewbtn}>
                                                         <a href={signedPdfUrl} target="_blank" rel="noopener noreferrer">
                                                             View Signed Pdf
                                                         </a>
                                                     </button>
-                                                </div>
-                                                    <div className={styles.Submit_div}>
+                                                {/* </div> */}
+                                                    {/* <div className={styles.Submit_div}> */}
                                                     <button className={styles.SubmitSign} onClick={handleSubmit}>Submit</button>
                                                     {setShowConfermation && (
                                                             <AlertDialogSlide open={showConFarmation} handleClose={() => setShowConfermation(false)} signedPdfUrl={signedPdfUrl} signedPdfBlob={signedPdfBlob} />
                                                     )}
-                                                </div>
+                                                {/* </div> */}
                                             </div>
                                         )}
                                     </div>

@@ -178,7 +178,7 @@
 
 .modal_button {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     width: 60%;
     flex-wrap: wrap;
 }
@@ -304,5 +304,12 @@
 
     .desktopHeader {
         display: none;
+    }
+}
+
+@media(max-width:767px) {
+    .pdf_viewer {
+        width: 100%;
+        overflow: scroll;
     }
 }
